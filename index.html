@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="js/mui.min.js"></script>
+    <link href="css/mui.min.css" rel="stylesheet"/>
+    <style type="text/css">
+    	
+    </style>
+    <script type="text/javascript" charset="utf-8">
+      	mui.init();
+   
+    </script>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<h1 class="mui-title">多人聊天室</h1>
+	</header>
+	<div class="mui-content">
+			    <h4>您好，欢迎登录聊天室</h4>
+	</div>
+	<div class="mui-content">
+			<form class="mui-input-group">
+			    <div class="mui-input-row">
+			        <label>昵称</label>
+			        <input type="text" class="mui-input-clear" placeholder="请输入昵称" id="nickname">
+			    </div>
+			</form>
+			<div class="mui-content-padded">
+			    <button type="button" class="mui-btn mui-btn-block mui-btn-blue" id="enter">登录</button>
+			</div>
+		</div>
+		
+		<script type="text/javascript">
+			var nickname=document.getElementById("nickname");
+          var enter=document.getElementById("enter");
+          enter.addEventListener('tap',function(){
+            if(nickname.value.length==0){
+             plus.ui.toast("用户名不能为空");
+				return;
+            }
+            if(nickname.value.length>10){
+            	 plus.ui.toast("用户名太长，请重新输入");
+            	 nickname.value=null;
+				return;
+            }
+            //h5本地存储nickname
+            localStorage.nickname=nickname.value;
+            self.location='Chat.html';
+          });
+		</script>
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="https://cdn.wilddog.com/sdk/js/2.2.0/wilddog-sync.js"></script>
+		<script src="https://cdn.wilddog.com/sdk/js/current/wilddog.js"></script>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<style type="text/css">
+		body{
+			background: #f2f2f2;
+		}
+		.mui-input-group{
+			position: absolute;
+			bottom: 10px;
+			width: 100%;
+		}
+		.mui-btn{
+			height: 100%;
+		}
+		.mui-scroll-wrapper{
+			margin-top: 45px;
+			margin-bottom: 50px;
+		}
+		.mui-scroll{
+			margin-top:10px;
+		}
+		
+		#myname{
+			margin-right: 5px;
+			color: #e60000;
+			font-weight: bold;
+			font-size: 18px;
+			line-height: 20px;
+			text-align: center;
+    	}
+    	#mytext{
+			background:white;
+			text-align: center;
+			font-size: 18px;
+			line-height: 20px;
+			padding: 2px 15px 2px 15px;
+			border: 1px solid #DDDDDD;
+			border-radius: 5px;
+			color:black;
+    	}
+    	#hename{
+			margin-left: 5px;
+			color: #4c0099;
+			font-weight: bold;
+			font-size: 18px;
+			line-height: 20px;
+			text-align: center;
+    	}
+    	#hetext{
+			background:white;
+			text-align: center;
+			font-size: 18px;
+			line-height: 20px;
+			padding: 2px 15px 2px 15px;
+			border: 1px solid #DDDDDD;
+			border-radius: 5px;
+			color:black;
+    	}
+    	#time{
+    		margin-left: 5px;
+    		margin-right: 5px;
+    		line-height: 20px;
+    	}
+    	#myp{
+    		text-align: right;
+    		margin-bottom: 15px;;
+    	}
+    	#hep{
+    		margin-bottom:15px;
+    	}
+		</style>
+		<script src="js/mui.min.js"></script>
+		
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" id="goBack"></a>
+		    <h1 class="mui-title">聊天中</h1>
+		</header>
+		
+		<div class="mui-scroll-wrapper">
+			<div class="mui-scroll" id="chatText">
+				<!--<span>放dom的div</span>-->			
+			</div>
+		</div>
+		
+		<form class="mui-input-group">
+			    <div class="mui-input-row">
+			        <button type="button" class="mui-btn mui-btn-blue" id="send">发送</button>
+			        <input type="text" class="mui-input" placeholder="在此输入内容" id="content">
+			    </div>
+		</form>
+    
+    <script type="text/javascript">
+			mui.init();
+			mui('.mui-scroll-wrapper').scroll({
+			deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+		});
+			//获得时间
+			function gettime(){
+				var Time=new Date();
+				var h=Time.getHours();
+				var m=Time.getMinutes();
+				var s=Time.getSeconds();
+				function Two(s){
+					if(s<10){
+						return "0"+s;
+					}else{
+						return s;
+					}
+				}
+				h=Two(h);
+				m=Two(m);
+				s=Two(s);
+				mytime=h+":"+m+":"+s;	
+				return mytime;
+			}
+				//
+					var config = {
+					  syncURL: "https://umchat.wilddogio.com" 
+					};
+					wilddog.initializeApp(config);
+					var ref = wilddog.sync().ref();
+				//
+						
+				// 返回住界面,删除数据
+				var goBack=document.getElementById("goBack");
+				goBack.addEventListener('tap',function(){
+					ref.remove();
+					self.location='index.html';
+				})
+
+				var nickname=localStorage.nickname;
+				var content=document.getElementById("content");
+				var send=document.getElementById("send");
+				var oContent=content.value;
+				//获得时间
+				
+
+//发送
+				send.addEventListener('tap',function(){				
+					var oContent=content.value;
+					ref.push({
+						"nickname":nickname,
+						"content" : oContent
+					});
+					content.value="";
+				})
+
+//监听获取数据
+	ref.on("child_added",function(datasnapshot){
+//		var nickname=localStorage.nickname;
+		var chatText=document.getElementById('chatText');
+		if(datasnapshot.val().nickname==nickname){
+			myN=getInsertHTML(datasnapshot.val().nickname);
+			myC=getInsertHTML(datasnapshot.val().content);
+			my="<p id='myp'><span id='time'>"+gettime()+"</span><span id='mytext'>"+myC+"</span><span id='myname'>"+myN+"</span></p>"
+			chatText.innerHTML+=my;
+
+		}else{
+			heN=getInsertHTML(datasnapshot.val().nickname);
+			heC=getInsertHTML(datasnapshot.val().content);
+			he="<p id='hep'><span id='hename'>"+heN+"</span><span id='hetext'>"+heC+"</span><span id='time'>"+gettime()+"</span></p>"
+			chatText.innerHTML+=he;
+		}
+	
+	})
+		function getInsertHTML(te){
+			var string=te;
+			return string
+		}
+		
+		</script>
+	</body>
+
+</html>
